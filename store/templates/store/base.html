@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ALPHA STORE — Modern Clothing Store{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a href="{% url 'store:home' %}" class="wordmark">
+        <span class="wordmark-text">ALPHA STORE</span>
+        <span class="wordmark-bar"></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="{% url 'store:product_list' %}">Shop</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'store:order_history' %}">My Orders</a></li>
+          <li><a href="{% url 'store:logout' %}">Logout, {{ user.username }}</a></li>
+        {% else %}
+          <li><a href="{% url 'store:login' %}">Login</a></li>
+          <li><a href="{% url 'store:register' %}">Register</a></li>
+        {% endif %}
+        <li>
+          <a href="{% url 'store:cart_detail' %}" class="cart-pill">
+            Cart <span class="cart-count">{{ cart|length }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <nav class="category-strip">
+      <div class="container">
+        <a href="{% url 'store:product_list' %}">All</a>
+        {% for cat in categories_nav %}
+          <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div><strong>ALPHA STORE</strong> — clothing, considered.</div>
+      <div>&copy; {% now "Y" %} ALPHA STORE. Built with Django.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

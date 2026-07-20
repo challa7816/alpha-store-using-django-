@@ -1,0 +1,20 @@
+{% extends "store/base.html" %}
+
+{% block title %}Payment cancelled — ALPHA STORE{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="success-card">
+    <div class="success-icon" style="background: var(--ink-soft);">×</div>
+    <h1>Payment cancelled</h1>
+    <p style="color:var(--ink-soft);">
+      Your order <strong>#{{ order.id }}</strong> hasn't been charged. It's still saved,
+      so you can pick up right where you left off whenever you're ready.
+    </p>
+    <p style="margin-top:24px; display:flex; gap:12px; justify-content:center;">
+      <a href="{% url 'store:payment_checkout' order.id %}" class="btn">Retry payment</a>
+      <a href="{% url 'store:product_list' %}" class="btn btn-outline">Back to shop</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "store/base.html" %}
+
+{% block title %}My Orders — ALPHA STORE{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Account</span>
+      <h2>My orders</h2>
+    </div>
+  </div>
+
+  {% if orders %}
+    <table class="cart-table">
+      <thead>
+        <tr><th>Order</th><th>Placed on</th><th>Payment</th><th>Status</th><th>Total</th></tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.created_at|date:"d M Y" }}</td>
+            <td>{{ order.get_payment_method_display }}{% if order.paid %} ✓{% endif %}</td>
+            <td style="text-transform:capitalize;">{{ order.status }}</td>
+            <td>₹{{ order.get_total_cost }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">You haven't placed any orders yet.</div>
+  {% endif %}
+</section>
+{% endblock %}

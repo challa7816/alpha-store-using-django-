@@ -1,0 +1,28 @@
+{% extends "store/base.html" %}
+
+{% block title %}Order confirmed — ALPHA STORE{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h1>Thank you, {{ order.full_name }}.</h1>
+    <p style="color:var(--ink-soft);">
+      Your order <strong>#{{ order.id }}</strong> has been placed and is being prepared.
+      A confirmation has been noted for <strong>{{ order.email }}</strong>.
+    </p>
+    {% if order.payment_method == 'card' %}
+      {% if order.paid %}
+        <p class="stock-note">Payment received via card — thank you!</p>
+      {% else %}
+        <p class="stock-note" style="color:#a4402f;">We're still confirming your card payment. You'll get an update shortly.</p>
+      {% endif %}
+    {% else %}
+      <p class="stock-note">Payment method: Cash on Delivery — pay when your order arrives.</p>
+    {% endif %}
+    <p style="margin-top:24px;">
+      <a href="{% url 'store:product_list' %}" class="btn">Continue shopping</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "store/base.html" %}
+
+{% block title %}{% if category %}{{ category.name }} — ALPHA STORE{% else %}Shop — ALPHA STORE{% endif %}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">{% if category %}{{ category.name }}{% else %}Full collection{% endif %}</span>
+      <h2>{% if category %}{{ category.name }}{% else %}Shop all products{% endif %}</h2>
+    </div>
+    <form method="get" action="{% url 'store:product_list' %}">
+      <input type="text" name="q" class="form-control" placeholder="Search products…" value="{{ query }}" style="width:220px;">
+    </form>
+  </div>
+
+  <div class="product-grid">
+    {% for product in products %}
+      {% include "store/_product_card.html" %}
+    {% empty %}
+      <div class="empty-state">
+        No products found{% if query %} for "{{ query }}"{% endif %}. Try a different search or category.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "store/base.html" %}
+
+{% block title %}Your Cart — ALPHA STORE{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Step 1 of 2</span>
+      <h2>Your cart</h2>
+    </div>
+  </div>
+
+  {% if cart|length > 0 %}
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Size</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart %}
+          <tr>
+            <td>
+              <div class="cart-item-name">{{ item.product.name }}</div>
+              <div class="cart-item-meta">{{ item.product.category.name }}</div>
+            </td>
+            <td>{{ item.size|default:"—" }}</td>
+            <td>₹{{ item.price }}</td>
+            <td>
+              <form action="{% url 'store:cart_add' item.product.id %}" method="post" class="cart-qty-form">
+                {% csrf_token %}
+                <select name="quantity" class="form-control">
+                  {% for n in "123456789" %}
+                    <option value="{{ n }}" {% if item.quantity == n|add:"0" %}selected{% endif %}>{{ n }}</option>
+                  {% endfor %}
+                </select>
+                <input type="hidden" name="size" value="{{ item.size }}">
+                <input type="hidden" name="update" value="True">
+                <button type="submit" class="btn btn-outline btn-small">Update</button>
+              </form>
+            </td>
+            <td>₹{{ item.total_price }}</td>
+            <td>
+              <form action="{% url 'store:cart_remove' item.product.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="size" value="{{ item.size }}">
+                <button type="submit" class="btn btn-danger btn-small">Remove</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <span class="total-label">Total</span>
+      <span class="total-value">₹{{ cart.get_total_price }}</span>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:12px;">
+      <a href="{% url 'store:product_list' %}" class="btn btn-outline">Continue shopping</a>
+      <a href="{% url 'store:order_create' %}" class="btn">Proceed to checkout</a>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      Your cart is empty. <a href="{% url 'store:product_list' %}" style="color:var(--forest); font-weight:600;">Start shopping →</a>
+    </div>
+  {% endif %}
+
+  {% if recommended_products %}
+    <hr class="rule">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Complete the look</span>
+        <h2>You might also like</h2>
+      </div>
+    </div>
+    <div class="product-grid">
+      {% for rec in recommended_products %}
+        {% include "store/_product_card.html" with product=rec %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

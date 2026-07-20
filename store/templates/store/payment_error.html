@@ -1,0 +1,23 @@
+{% extends "store/base.html" %}
+
+{% block title %}Payment unavailable — ALPHA STORE{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="success-card">
+    <div class="success-icon" style="background: var(--brick);">!</div>
+    <h1>Card payment isn't set up yet</h1>
+    <p style="color:var(--ink-soft);">
+      {{ error }}
+    </p>
+    <p style="color:var(--ink-soft); font-size:13px;">
+      Your order <strong>#{{ order.id }}</strong> has been saved and is waiting for payment.
+      Once Stripe API keys are configured in the environment, reload this page to try again.
+    </p>
+    <p style="margin-top:24px; display:flex; gap:12px; justify-content:center;">
+      <a href="{% url 'store:payment_checkout' order.id %}" class="btn">Try again</a>
+      <a href="{% url 'store:product_list' %}" class="btn btn-outline">Back to shop</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

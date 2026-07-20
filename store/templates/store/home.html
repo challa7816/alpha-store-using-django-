@@ -1,0 +1,80 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}ALPHA STORE — Modern Clothing Store{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="eyebrow" style="color:#d8a73e;">New season</span>
+      <h1>Clothing built<br>for <em>real</em> days.</h1>
+      <p>Considered basics and statement pieces, cut from honest fabric.
+         Browse the collection and find what fits your week.</p>
+      <a href="{% url 'store:product_list' %}" class="btn">Shop the collection</a>
+    </div>
+    <div class="hero-figure">
+      <img src="{% static 'store/img/hero.jpg' %}" alt="ALPHA STORE SS26 collection">
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Shop by category</span>
+      <h2>Find your section</h2>
+    </div>
+  </div>
+  <div class="product-grid">
+    {% for cat in categories %}
+      <a href="{{ cat.get_absolute_url }}" class="product-card">
+        <div class="product-thumb">
+          {% if cat.image %}
+            <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+          {% elif cat.slug == 'men' %}
+            <img src="{% static 'store/img/category-men.jpg' %}" alt="{{ cat.name }}">
+          {% elif cat.slug == 'women' %}
+            <img src="{% static 'store/img/category-women.jpg' %}" alt="{{ cat.name }}">
+          {% elif cat.slug == 'kids' %}
+            <img src="{% static 'store/img/category-kids.jpg' %}" alt="{{ cat.name }}">
+          {% elif cat.slug == 'accessories' %}
+            <img src="{% static 'store/img/category-accessories.jpg' %}" alt="{{ cat.name }}">
+          {% else %}
+            {{ cat.name }}
+          {% endif %}
+        </div>
+        <div class="product-body">
+          <span class="product-category">{{ cat.products.count }} item{{ cat.products.count|pluralize }}</span>
+          <h3 class="product-name">{{ cat.name }}</h3>
+        </div>
+      </a>
+    {% empty %}
+      <div class="empty-state">
+        No categories yet. Add some from the Django admin panel.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Fresh in</span>
+      <h2>Featured pieces</h2>
+    </div>
+    <a href="{% url 'store:product_list' %}" class="btn btn-outline btn-small">View all</a>
+  </div>
+  <div class="product-grid">
+    {% for product in featured_products %}
+      {% include "store/_product_card.html" %}
+    {% empty %}
+      <div class="empty-state">
+        No products yet. Add some from the Django admin panel.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
